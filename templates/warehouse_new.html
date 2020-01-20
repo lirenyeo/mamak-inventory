@@ -1,0 +1,15 @@
+{% extends '_layout.html' %}
+
+{% block content %}
+<div class="container m-5">
+  <h1>Create Warehouse</h1>
+  <form action="{{url_for('warehouse_create')}}" method="POST">
+    <div class="form-group">
+      <label>Warehouse Location</label>
+      <input class="form-control" type="text" name="wh_location" />
+      <input class="btn btn-primary" type="submit" value="Create Warehouse" />
+    </div>
+  </form>
+
+</div>
+{% endblock%}

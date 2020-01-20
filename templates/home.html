@@ -1,0 +1,33 @@
+{% extends '_layout.html' %}
+
+{% block content %}
+<div class="container m-5">
+  <h1>Welcome to Mamak Inventory System</h1>
+  <form id="store_form" action="{{url_for('store_create')}}" method="POST">
+    <div class="form-group">
+      <label>Store Name</label>
+      <input id="store_name" class="form-control" type="text" name="store_name" />
+      <input class="btn btn-primary" type="submit" value="Create Store" />
+    </div>
+  </form>
+
+  <section>
+    <div class="row">
+      {% for store in stores %}
+      <div class="col-md-4 mt-3">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{store.name}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Number of warehouse: {{store.warehouses.count()}}</h6>
+              <a href="{{url_for('store_show', id=store.id)}}" class="card-link">Visit Store Page</a>
+              <form action="{{url_for('store_delete', id=store.id)}}", method="POST">
+                <input class="btn btn-danger" type="submit" value="DELETE">
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock%}
