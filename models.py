@@ -29,3 +29,8 @@ class Product(BaseModel):
    description = pw.TextField()
    warehouse = pw.ForeignKeyField(Warehouse, backref='products')
    color = pw.CharField(null=True)
+   price = pw.IntegerField()
+
+class Discount(BaseModel):
+   discount_code = pw.CharField(index=True)
+   discount_percentage = pw.IntegerField()

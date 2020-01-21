@@ -1,7 +1,7 @@
 import os
 import peeweedbevolve
-from flask import Flask, render_template, request, flash, redirect
-from models import db, Store, Warehouse, Product
+from flask import Flask, render_template, request, flash, redirect, jsonify
+from models import db, Store, Warehouse, Product, Discount
 
 app = Flask(__name__)
 app.secret_key = os.getenv('APP_SECRET')
@@ -63,6 +63,63 @@ def store_delete(id):
     store.delete_instance()
 
     return redirect('/')
+
+# @app.route('/products/<p_id>')
+# def product_show(p_id):
+#     p = Product.get_or_none(Product.id == p_id)
+#     # if p_id does not exist
+#     if not p:
+#         flash('no such product')
+#         redirect('/')
+
+#     dc_args = request.args.get('dc')
+
+#     if dc_args:
+#         dc_row = Discount.get_or_none(Discount.discount_code == dc_args)
+#         if dc_row:
+#             dc_multiplier = (100 - dc_row.discount_percentage) / 100
+#             return render_template
+#         else:
+#             return jsonify({
+#                 "message": 'Wrong discount code'
+#             })
+#     else:
+#         return redirect
+
+# API ENDPOINT FOR DISCOUNT
+@app.route('/api/products/<p_id>')
+def api_product_show(p_id):
+    p = Product.get_or_none(Product.id == p_id)
+    # if p_id does not exist
+    if not p:
+        return jsonify({
+            "message": 'No such product'
+        })
+
+    dc_args = request.args.get('dc')
+
+    if dc_args:
+        dc_row = Discount.get_or_none(Discount.discount_code == dc_args)
+        if dc_row:
+            dc_multiplier = (100 - dc_row.discount_percentage) / 100
+            return jsonify({
+                "name": p.name,
+                "description": p.description,
+                "originalPrice": p.price,
+                "discountedPrice": p.price * dc_multiplier
+            })
+        else:
+            return jsonify({
+                "message": 'Wrong discount code'
+            })
+    else:
+        return jsonify({
+            "name": p.name,
+            "description": p.description,
+            "price": p.price
+        })
+
+
 
 if __name__ == '__main__':
    app.run()
